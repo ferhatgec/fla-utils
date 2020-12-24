@@ -13,58 +13,67 @@
 //
 //
 
+
 // Check version of FlaScript (Fla-Utils required latest version)
 except(version) : 0.3 -> { error("Install latest version of FlaScript") } version;
 
-  
 // For GNU/Linux
 // cpu.fls supports only GNU/Linux yet.
 func -> GetCPU() {
-	// #if ... #endif ...
-	// This preprocessor will be added with 0.3-beta-4.
-	// Supported OSes are here:
-	// LINUX      (__linux__)
-	// FREEBSD    (__FreeBSD__)
-	// OPENBSD    (__OpenBSD__)
-	// NETBSD     (__NetBSD__)
-	// GNU_HURD   (__gnu_hurd__)
-	// GNU_LINUX  (__gnu_linux__)
-	// MORPHOS    (__MORPHOS__)
-	// APPLE      (__APPLE__)
-	// DRAGONFLY  (__DragonFly__)
-	// BEOS       (__BEOS__)
-	// SYLLABLE   (__SYLLABLE__)
-	// OS2        (OS2)
-	// PLAN9      (PLAN9)
-	// WIN64      (_WIN64)
-	// WIN32      (_WIN32)
-	
-	//#if LINUX
-		// lineof reads file (/proc/info) and finds model name 
-		// and returns if model name is found.
+	// lineof reads file (/proc/info) and finds model name 
+	// and returns if model name is found.
 	   
-		@lineof -> cpu_name -> "/proc/cpuinfo" : "model name	: " <
+	@lineof -> cpu_name -> "/proc/cpuinfo" : "model name" <
 	
-		// Gets 
-		@substring -> cpu_name -> model name	:  <
+	// Gets 
+	@substring -> cpu_name -> model name	:  <
 	
-		// Erase last character of cpu_name variable
-		@pop_back -> cpu_name <
+	// Erase last character of cpu_name variable
+	@pop_back -> cpu_name <
 
-		// print cpu_name with newline
-		print(string) -> "{cpu_name}\n"
-	//#endif LINUX
-
+	// print cpu_name with newline
+	print(string) -> "{cpu_name}\n"
+	
 	// Exit from program with 1
 	exit(success)
 } GetCPU;
+
 
 main() -> main {
 	// Create null cpu_name string
 	var(string) -> null -> cpu_name <-
 
 	// Don't make anything, FlaScript's preprocessor has already executed 
-	//GetCPU() if your system based on GNU/Linux
-	
-	func -> GetCPU()  
+	// GetCPU() if your system based on GNU/Linux  
 } main;
+
+
+// #if ...
+// #endif ...
+// This preprocessor added with 0.3-beta-4.
+// Supported OSes are here:
+// LINUX      (__linux__)
+// FREEBSD    (__FreeBSD__)
+// OPENBSD    (__OpenBSD__)
+// NETBSD     (__NetBSD__)
+// GNU_HURD   (__gnu_hurd__)
+// GNU_LINUX  (__gnu_linux__)
+// MORPHOS    (__MORPHOS__)
+// APPLE      (__APPLE__)
+// DRAGONFLY  (__DragonFly__)
+// BEOS       (__BEOS__)
+// SYLLABLE   (__SYLLABLE__)
+// OS2        (OS2)
+// PLAN9      (PLAN9)
+// WIN64      (_WIN64)
+// WIN32      (_WIN32)
+
+#if LINUX
+	func -> GetCPU()
+#endif LINUX
+
+#if FREEBSD
+	print(string) -> "Not available yet.\n"
+	
+	exit(success)
+#endif FREEBSD
